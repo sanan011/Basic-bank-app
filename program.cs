@@ -77,7 +77,7 @@ namespace MyFirstProgram
                     {
                         Console.Write("Choose the operation you want to do: ");
                         userChoice = Convert.ToInt32(Console.ReadLine());
-                    } while (userChoice != 1 && userChoice != 2 && userChoice != 3 && userChoice != 4);
+                    } while (userChoice != 1 && userChoice != 2 && userChoice != 3);
 
                     if (userChoice == 1)
                     {
