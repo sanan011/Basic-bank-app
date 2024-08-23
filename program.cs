@@ -30,13 +30,14 @@ namespace MyFirstProgram
             int operationNum = chooseOperation();
             bankUsers[] bankUsersArray = new bankUsers[10];
 
-            bankUsers user1 = new bankUsers("Jack", 34, 4500, "Jackswanson1990");
-            bankUsers user2 = new bankUsers("Smith", 26, 2200, "sMithnewJearsy");
-            bankUsers user3 = new bankUsers("Dane", 45, 12000, "Floridadane1979");
+            // Crucial part is that we assuma that our money in balance is in USD.
+            bankUsers user1 = new bankUsers("jack", 34, 4500, "Jackswanson1990");
+            bankUsers user2 = new bankUsers("smith", 26, 2200, "sMithnewJearsy");
+            bankUsers user3 = new bankUsers("dane", 45, 12000, "Floridadane1979");
 
-            bankUsersArray[1] = user1;
-            bankUsersArray[2] = user2;
-            bankUsersArray[3] = user3;
+            bankUsersArray[0] = user1;
+            bankUsersArray[1] = user2;
+            bankUsersArray[2] = user3;
 
             if (operationNum == 1)
             {
@@ -67,7 +68,7 @@ namespace MyFirstProgram
                     Console.WriteLine("|      1. Withdraw money from your account    |");
                     Console.WriteLine("|     2. Top up your balance in your account  |");
                     Console.WriteLine("|             3. Show your balance            |");
-                    Console.WriteLine("|                    4.Exit                   |");
+                    Console.WriteLine("|                    4. Exit                   |");
                     Console.WriteLine("-----------------------------------------------");
                     Console.WriteLine("");
 
@@ -77,21 +78,37 @@ namespace MyFirstProgram
                     {
                         Console.Write("Choose the operation you want to do: ");
                         userChoice = Convert.ToInt32(Console.ReadLine());
-                    } while (userChoice != 1 && userChoice != 2 && userChoice != 3);
+                    } while (userChoice != 1 && userChoice != 2 && userChoice != 3 && userChoice != 4);
 
                     if (userChoice == 1)
                     {
+                        Console.WriteLine("Choose currency: 1. USD  2. AZN");
+                        int currencyChoice;
+                        do
+                        {
+                            Console.Write("Currency (1 or 2): ");
+                            currencyChoice = Convert.ToInt32(Console.ReadLine());
+                        } while (currencyChoice != 1 && currencyChoice != 2);
+
                         Console.Write("How much money do you want to withdraw? ");
                         amountOfMoney = Convert.ToInt32(Console.ReadLine());
 
-                        if (amountOfMoney > bankUsersArray[userIndex].wallet)
+                        float conversionRate = 1.7f;
+                        float amountInUSD = amountOfMoney;
+
+                        if (currencyChoice == 2) // AZN
+                        {
+                            amountInUSD = amountOfMoney / conversionRate; // Convert AZN to USD
+                        }
+
+                        if (amountInUSD > bankUsersArray[userIndex].wallet)
                         {
                             Console.WriteLine("Insufficient funds!");
                         }
                         else
                         {
-                            bankUsersArray[userIndex].withdraw(amountOfMoney);
-                            Console.WriteLine($"Withdraw successful! New balance: {bankUsersArray[userIndex].wallet}");
+                            bankUsersArray[userIndex].withdraw(amountInUSD);
+                            Console.WriteLine($"Withdraw successful! New balance: {bankUsersArray[userIndex].wallet} USD");
                         }
                     }
                     else if (userChoice == 2)
@@ -100,11 +117,11 @@ namespace MyFirstProgram
                         amountOfMoney = Convert.ToInt32(Console.ReadLine());
 
                         bankUsersArray[userIndex].topUpBalance(amountOfMoney);
-                        Console.WriteLine($"Top-up successful! New balance: {bankUsersArray[userIndex].wallet}");
+                        Console.WriteLine($"Top-up successful! New balance: {bankUsersArray[userIndex].wallet} USD");
                     }
                     else if (userChoice == 3)
                     {
-                        Console.WriteLine("Your balance: " + bankUsersArray[userIndex].wallet);
+                        Console.WriteLine("Your balance: " + bankUsersArray[userIndex].wallet + " USD");
                     }
                     else if (userChoice == 4)
                     {
@@ -196,7 +213,7 @@ namespace MyFirstProgram
 
         public void showBalance()
         {
-            Console.WriteLine($"Current balance: {wallet}");
+            Console.WriteLine($"Current balance: {wallet} USD");
         }
 
         public float withdraw(float amount)
